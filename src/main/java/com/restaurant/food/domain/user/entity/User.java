@@ -4,15 +4,16 @@ import com.restaurant.food.domain.review.entity.Review;
 import com.restaurant.food.domain.store.entity.Store;
 import com.restaurant.food.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Builder
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class User extends BaseTimeEntity {
     /* 사용자 엔티티
     * 사용자는 여러 맛집을 등록하고, 여러 리뷰를 쓸 수 있습니다. */
