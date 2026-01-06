@@ -5,9 +5,11 @@ import com.restaurant.food.domain.store.dto.StoreResponseDto;
 import com.restaurant.food.domain.store.entity.Store;
 import com.restaurant.food.domain.store.repository.StoreRepository;
 import com.restaurant.food.domain.user.entity.User;
+import com.restaurant.food.domain.user.repository.UserRepository;
 import com.restaurant.food.global.service.KakaoAddressService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,8 +21,13 @@ import java.util.stream.Collectors;
 public class StoreService {
     private final StoreRepository storeRepository;
     private final KakaoAddressService kakaoAddressService;
+    private final UserRepository userRepository;
 
-    public Long saveStore(StoreRequestDto request /*, User user*/) {
+    public Long saveStore(StoreRequestDto request, String userEmail) {
+        // 0. 유저 조회 (로그인 사용자 확인)
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new UsernameNotFoundException("유저를 찾을 수 없습니다."));
+
         // 1. 외부 API를 통해 위도/경도 획득
         KakaoAddressService.Coordinate coordinate = kakaoAddressService.getCoordinate(request.getAddress());
 
@@ -31,7 +38,7 @@ public class StoreService {
                 .category(request.getCategory())
                 .latitude(coordinate.getLat())
                 .longitude(coordinate.getLng())
-//                .user(user)
+                .user(user)
                 .build();
 
         return storeRepository.save(store).getId();
