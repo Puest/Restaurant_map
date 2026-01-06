@@ -1,6 +1,7 @@
 package com.restaurant.food.domain.review.service;
 
 import com.restaurant.food.domain.review.dto.ReviewRequestDto;
+import com.restaurant.food.domain.review.dto.ReviewResponseDto;
 import com.restaurant.food.domain.review.entity.Review;
 import com.restaurant.food.domain.review.repository.ReviewRepository;
 import com.restaurant.food.domain.store.entity.Store;
@@ -11,6 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional
@@ -39,5 +43,24 @@ public class ReviewService {
 
         // 저장
         return reviewRepository.save(review).getId();
+    }
+
+    @Transactional(readOnly = true)
+    public List<ReviewResponseDto> getReviews(Long storeId) {
+        // 가게 해당 여부 확인
+        storeRepository.findById(storeId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 가게가 존재하지 않습니다."));
+
+        // 해당 가게 리뷰 리스트 조회
+        List<Review> reviews = reviewRepository.findAllByStoreId(storeId);
+
+        // Entity -> DTO 변환
+        List<ReviewResponseDto> result = new ArrayList<>();
+
+        for(Review review: reviews) {
+            result.add(new ReviewResponseDto(review));
+        }
+
+        return result;
     }
 }
