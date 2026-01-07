@@ -33,5 +33,5 @@ public class Store extends BaseTimeEntity {
     private User user; // 등록한 사용자
 
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
-    private List<Review> review = new ArrayList<>();
+    private List<Review> reviews = new ArrayList<>();
 }

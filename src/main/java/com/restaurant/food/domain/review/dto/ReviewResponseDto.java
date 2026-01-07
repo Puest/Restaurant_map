@@ -1,7 +1,11 @@
 package com.restaurant.food.domain.review.dto;
 
 import com.restaurant.food.domain.review.entity.Review;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Getter
+@NoArgsConstructor
 public class ReviewResponseDto {
     private Long id;
     private String nickname;
