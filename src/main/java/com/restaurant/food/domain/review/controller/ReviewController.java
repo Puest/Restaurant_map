@@ -2,7 +2,6 @@ package com.restaurant.food.domain.review.controller;
 
 import com.restaurant.food.domain.review.dto.ReviewRequestDto;
 import com.restaurant.food.domain.review.dto.ReviewResponseDto;
-import com.restaurant.food.domain.review.repository.ReviewRepository;
 import com.restaurant.food.domain.review.service.ReviewService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
