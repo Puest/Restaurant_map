@@ -36,4 +36,12 @@ public class Store extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
     private List<Review> reviews = new ArrayList<>();
+
+    public void update(String name, String address, Category category, Double latitude, Double longitude) {
+        this.name = name;
+        this.address = address;
+        this.category = category;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
 }

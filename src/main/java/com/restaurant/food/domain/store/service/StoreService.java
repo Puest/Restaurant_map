@@ -1,5 +1,6 @@
 package com.restaurant.food.domain.store.service;
 
+import com.restaurant.food.domain.favorite.repository.FavoriteRepository;
 import com.restaurant.food.domain.store.dto.StoreRequestDto;
 import com.restaurant.food.domain.store.dto.StoreResponseDto;
 import com.restaurant.food.domain.store.entity.Store;
@@ -22,6 +23,7 @@ public class StoreService {
     private final StoreRepository storeRepository;
     private final KakaoAddressService kakaoAddressService;
     private final UserRepository userRepository;
+    private final FavoriteRepository favoriteRepository;
 
     public Long saveStore(StoreRequestDto request, String userEmail) {
         // 0. 유저 조회 (로그인 사용자 확인)
@@ -67,5 +69,47 @@ public class StoreService {
         return storeRepository.findAllByUserId(user.getId()).stream()
                 .map(StoreResponseDto::new)
                 .collect(Collectors.toList());
+    }
+
+    // 4. 맛집 수정
+    public StoreResponseDto updateStore(Long id, StoreRequestDto request, String email) {
+        Store store = storeRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 맛집이 존재하지 않습니다. ID = " + id));
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("유저를 찾을 수 없습니다."));
+
+        if (!store.getUser().getId().equals(user.getId())) {
+            throw new IllegalArgumentException("본인이 등록한 맛집만 수정할 수 있습니다.");
+        }
+
+        KakaoAddressService.Coordinate coordinate = kakaoAddressService.getCoordinate(request.getAddress());
+
+        store.update(
+                request.getName(),
+                request.getAddress(),
+                request.getCategory(),
+                coordinate.getLat(),
+                coordinate.getLng()
+        );
+
+        return new StoreResponseDto(store);
+    }
+
+    // 5. 맛집 삭제
+    public void deleteStore(Long id, String email) {
+        Store store = storeRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 맛집이 존재하지 않습니다. ID = " + id));
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("유저를 찾을 수 없습니다."));
+
+        if (!store.getUser().getId().equals(user.getId())) {
+            throw new IllegalArgumentException("본인이 등록한 맛집만 삭제할 수 있습니다.");
+        }
+
+        // 즐겨찾기 FK 정리 후 삭제 (리뷰는 cascade로 처리)
+        favoriteRepository.deleteAllByStoreId(id);
+        storeRepository.delete(store);
     }
 }

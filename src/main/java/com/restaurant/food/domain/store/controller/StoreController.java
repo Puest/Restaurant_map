@@ -47,4 +47,20 @@ public class StoreController {
     public ResponseEntity<List<StoreResponseDto>> getMyStores(@AuthenticationPrincipal UserDetails userDetails) {
         return ResponseEntity.ok(storeService.getMyStores(userDetails.getUsername()));
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<StoreResponseDto> updateStore(
+            @PathVariable Long id,
+            @Valid @RequestBody StoreRequestDto storeRequestDto,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(storeService.updateStore(id, storeRequestDto, userDetails.getUsername()));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteStore(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        storeService.deleteStore(id, userDetails.getUsername());
+        return ResponseEntity.noContent().build();
+    }
 }
