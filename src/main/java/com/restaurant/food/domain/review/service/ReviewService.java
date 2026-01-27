@@ -1,5 +1,6 @@
 package com.restaurant.food.domain.review.service;
 
+import com.restaurant.food.domain.review.dto.MyReviewResponseDto;
 import com.restaurant.food.domain.review.dto.ReviewRequestDto;
 import com.restaurant.food.domain.review.dto.ReviewResponseDto;
 import com.restaurant.food.domain.review.entity.Review;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -62,5 +64,15 @@ public class ReviewService {
         }
 
         return result;
+    }
+
+    @Transactional(readOnly = true)
+    public List<MyReviewResponseDto> getMyReviews(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+
+        return reviewRepository.findAllByUserId(user.getId()).stream()
+                .map(MyReviewResponseDto::new)
+                .collect(Collectors.toList());
     }
 }

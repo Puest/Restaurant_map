@@ -58,4 +58,14 @@ public class StoreService {
                 .map(StoreResponseDto::new)
                 .collect(Collectors.toList());
     }
+
+    // 3. 내가 등록한 맛집 조회
+    public List<StoreResponseDto> getMyStores(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("유저를 찾을 수 없습니다."));
+
+        return storeRepository.findAllByUserId(user.getId()).stream()
+                .map(StoreResponseDto::new)
+                .collect(Collectors.toList());
+    }
 }

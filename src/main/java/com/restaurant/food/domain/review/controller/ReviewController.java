@@ -1,5 +1,6 @@
 package com.restaurant.food.domain.review.controller;
 
+import com.restaurant.food.domain.review.dto.MyReviewResponseDto;
 import com.restaurant.food.domain.review.dto.ReviewRequestDto;
 import com.restaurant.food.domain.review.dto.ReviewResponseDto;
 import com.restaurant.food.domain.review.service.ReviewService;
@@ -29,5 +30,10 @@ public class ReviewController {
     @GetMapping("/{storeId}")
     public ResponseEntity<List<ReviewResponseDto>> getStoreReview(@PathVariable Long storeId) {
         return ResponseEntity.ok(reviewService.getReviews(storeId));
+    }
+
+    @GetMapping("/my")
+    public ResponseEntity<List<MyReviewResponseDto>> getMyReviews(@AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(reviewService.getMyReviews(userDetails.getUsername()));
     }
 }

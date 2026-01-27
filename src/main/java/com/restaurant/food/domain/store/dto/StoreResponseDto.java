@@ -22,7 +22,7 @@ public class StoreResponseDto {
         this.id = store.getId();
         this.name = store.getName();
         this.address = store.getAddress();
-        this.category = store.getCategory();
+        this.category = store.getCategory().getId();
         this.latitude = store.getLatitude();
         this.longitude = store.getLongitude();
 
@@ -38,4 +38,3 @@ public class StoreResponseDto {
         this.avgRating = (count == 0) ? 0.0 : sum / count;
     }
 }
-

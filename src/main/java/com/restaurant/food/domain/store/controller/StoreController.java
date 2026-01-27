@@ -42,4 +42,9 @@ public class StoreController {
     public ResponseEntity<List<StoreResponseDto>> getAllStores() {
         return ResponseEntity.ok(storeService.getAllStores());
     }
+
+    @GetMapping("/my")
+    public ResponseEntity<List<StoreResponseDto>> getMyStores(@AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(storeService.getMyStores(userDetails.getUsername()));
+    }
 }

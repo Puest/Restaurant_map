@@ -1,5 +1,6 @@
 package com.restaurant.food.domain.user.entity;
 
+import com.restaurant.food.domain.favorite.entity.Favorite;
 import com.restaurant.food.domain.review.entity.Review;
 import com.restaurant.food.domain.store.entity.Store;
 import com.restaurant.food.global.entity.BaseTimeEntity;
@@ -35,6 +36,13 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false ,unique = true)
     private String nickname;
 
+    // 자기소개
+    @Column(length = 50)
+    private String bio;
+
+    // 프로필 이미지 파일명
+    private String profileImage;
+
     // 맛집 리스트 (양방향)
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Store> stores = new ArrayList<>();
@@ -42,5 +50,17 @@ public class User extends BaseTimeEntity {
     // 리뷰 리스트
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Review> reviews = new ArrayList<>();
+
+    // 즐겨찾기 리스트
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Favorite> favorites = new ArrayList<>();
+
+    public void updateBio(String bio) {
+        this.bio = bio;
+    }
+
+    public void updateProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
 }
 
