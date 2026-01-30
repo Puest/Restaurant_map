@@ -15,4 +15,7 @@ public class StoreRequestDto {
 
     @NotNull
     private Category category;
+
+    private Double myRating;
+    private String myNote;
 }

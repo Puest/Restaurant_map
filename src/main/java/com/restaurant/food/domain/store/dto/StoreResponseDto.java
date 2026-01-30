@@ -1,6 +1,5 @@
 package com.restaurant.food.domain.store.dto;
 
-import com.restaurant.food.domain.review.entity.Review;
 import com.restaurant.food.domain.store.entity.Store;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +13,8 @@ public class StoreResponseDto {
     private String category;
     private Double latitude;
     private Double longitude;
-    private Double avgRating;
+    private Double myRating; // 나의 별점
+    private String myNote; // 나의 기록
     private Long userId;
 
     // Entity → DTO 변환 생성자
@@ -26,16 +26,7 @@ public class StoreResponseDto {
         this.latitude = store.getLatitude();
         this.longitude = store.getLongitude();
         this.userId = store.getUser().getId();
-
-        // 별점 평균 계산 로직
-        double sum = 0.0;
-        int count = 0;
-
-        for (Review review : store.getReviews()) {
-            sum += review.getRating();
-            count++;
-        }
-
-        this.avgRating = (count == 0) ? 0.0 : sum / count;
+        this.myRating = store.getMyRating();
+        this.myNote = store.getMyNote();
     }
 }
