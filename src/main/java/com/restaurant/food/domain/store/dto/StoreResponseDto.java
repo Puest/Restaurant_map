@@ -15,7 +15,7 @@ public class StoreResponseDto {
     private Double latitude;
     private Double longitude;
     private Double avgRating;
-
+    private Long userId;
 
     // Entity → DTO 변환 생성자
     public StoreResponseDto(Store store) {
@@ -25,6 +25,7 @@ public class StoreResponseDto {
         this.category = store.getCategory().getId();
         this.latitude = store.getLatitude();
         this.longitude = store.getLongitude();
+        this.userId = store.getUser().getId();
 
         // 별점 평균 계산 로직
         double sum = 0.0;
